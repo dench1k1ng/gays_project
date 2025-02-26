@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "59514310363",
+    "project_id": "food-save-f4f89",
+    "storage_bucket": "food-save-f4f89.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59514310363:android:f050309da262e950ac86fe",
+        "android_client_info": {
+          "package_name": "com.example.food_save"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx-OJlryyEKB6wgC7iwSUar9iYQibzM3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
