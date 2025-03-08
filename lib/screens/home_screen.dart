@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'settings_screen.dart';
+import 'home_content.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -8,39 +9,40 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _screens = [HomeContent(), SettingsScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Sound Buttons")),
-      body: _screens[_selectedIndex],
+      body: HomeContent(), // Always display HomeContent
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          if (index == 1) {
+            // ✅ Push to SettingsScreen instead of changing state
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsScreen()),
+            );
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
         },
         selectedIndex: _selectedIndex,
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home_outlined),
-            label: '',
+            label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: '',
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
+            label: 'Settings',
           ),
         ],
       ),
     );
-  }
-}
-
-class HomeContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Home Screen"));
   }
 }

@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Sound Buttons',
       themeMode: settings.themeMode,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
@@ -34,6 +33,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
