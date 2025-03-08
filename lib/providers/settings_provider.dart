@@ -34,7 +34,7 @@ class SettingsProvider extends ChangeNotifier {
   void toggleTheme(bool isDark) async {
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('theme', isDark ? "light" : "dark");
+    await prefs.setString('theme', isDark ? "dark" : "light");
     notifyListeners();
   }
 
