@@ -10,12 +10,17 @@ class ApiService {
       log("⏳ Отправка запроса к API...");
       final response = await _dio.get('http://10.0.2.2:8000/api/cards/');
 
-
       log("✅ Ответ от API: ${response.statusCode}");
       log("📄 Данные: ${response.data}");
 
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
+
+        for (var item in data) {
+          print(
+              "📌 Raw category_id: ${item['category']} (${item['category_id'].runtimeType})");
+        }
+
         return data.map((json) => SoundButton.fromJson(json)).toList();
       } else {
         throw Exception("Ошибка загрузки данных. Код: ${response.statusCode}");

@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MediaQuery.of(context).orientation == Orientation.portrait;
     final crossAxisCount =
         isPortrait ? 2 : 5; // ✅ 2 buttons in portrait, 5 in landscape
+
     return Scaffold(
       appBar: AppBar(title: const Text("Soz Alem")),
       body: _selectedIndex == 0
@@ -136,9 +137,12 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: _playSound,
-      child: Card(
+      child: Card.filled(
+        color: _getCategoryColor(widget.button.categoryId),
         elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -167,4 +171,28 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
       ),
     );
   }
+}
+
+Color _getCategoryColor(int categoryId) {
+  List<Color> categoryColors = [
+    Colors.blueAccent,
+    Colors.greenAccent,
+    Colors.orangeAccent,
+    Colors.purpleAccent,
+    Colors.redAccent,
+    Colors.yellowAccent,
+    Colors.tealAccent,
+    Colors.pinkAccent,
+    Colors.indigoAccent,
+    Colors.cyanAccent,
+    Colors.brown,
+    Colors.limeAccent,
+    Colors.amberAccent,
+    Colors.deepOrangeAccent,
+    Colors.lightBlueAccent,
+  ];
+
+  return categoryId > 0 && categoryId <= categoryColors.length
+      ? categoryColors[categoryId - 1] // ✅ Get the correct color from the list
+      : Colors.grey; // Default color for unknown categories
 }
