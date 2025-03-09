@@ -1,0 +1,1 @@
+/home/denis/StudioProjects/sound_back_erke/build/app/intermediates/cxx/Debug/4q3wf1j4/obj/arm64-v8a

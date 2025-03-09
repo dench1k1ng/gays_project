@@ -23,48 +23,54 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sound Buttons")),
+      appBar: AppBar(title: const Text("Изучай звуки!")),
       body: _selectedIndex == 0
           ? FutureBuilder<List<SoundButton>>(
-        future: _buttonsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Ошибка: ${snapshot.error}"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("Нет доступных кнопок"));
-          }
+              future: _buttonsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Ошибка: ${snapshot.error}"));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text("Нет доступных кнопок"));
+                }
 
-          // Фильтруем кнопки без изображения
-          List<SoundButton> validButtons =
-          snapshot.data!.where((btn) => btn.image.isNotEmpty).toList();
+                // Фильтруем кнопки без изображения
+                List<SoundButton> validButtons = snapshot.data!
+                    .where((btn) => btn.image.isNotEmpty)
+                    .toList();
 
-          if (validButtons.isEmpty) {
-            return const Center(child: Text("Нет кнопок с изображениями"));
-          }
+                if (validButtons.isEmpty) {
+                  return const Center(
+                      child: Text("Нет кнопок с изображениями"));
+                }
 
-          return GridView.builder(
-            padding: const EdgeInsets.all(10),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1,
-            ),
-            itemCount: validButtons.length,
-            itemBuilder: (context, index) {
-              return SoundButtonWidget(button: validButtons[index]);
-            },
-          );
-        },
-      )
+                return GridView.builder(
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1,
+                  ),
+                  itemCount: validButtons.length,
+                  itemBuilder: (context, index) {
+                    return SoundButtonWidget(button: validButtons[index]);
+                  },
+                );
+              },
+            )
           : SettingsScreen(),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          if (index == 1) {
+            // ✅ Navigate to SettingsScreen as a separate page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsScreen()),
+            );
+          }
         },
         selectedIndex: _selectedIndex,
         destinations: const <Widget>[
@@ -74,7 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
             label: 'Settings',
           ),
         ],
@@ -109,6 +116,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
 
   void _playSound() async {
     try {
+      await _audioPlayer.stop(); // Stop any currently playing audio
+
       if (widget.button.audio.isNotEmpty) {
         await _audioPlayer.play(UrlSource(widget.button.audio));
       } else {
@@ -133,7 +142,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
             Expanded(
               child: SvgPicture.network(
                 widget.button.image,
-                placeholderBuilder: (context) => const CircularProgressIndicator(),
+                placeholderBuilder: (context) =>
+                    const CircularProgressIndicator(),
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,
@@ -143,7 +153,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 widget.button.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),

@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/denis/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/usr/bin/ninja",
+      "-C",
+      "/home/denis/StudioProjects/sound_back_erke/android/app/.cxx/RelWithDebInfo/3e4236m3/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/usr/bin/ninja",
+    "-C",
+    "/home/denis/StudioProjects/sound_back_erke/android/app/.cxx/RelWithDebInfo/3e4236m3/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

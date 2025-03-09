@@ -1,0 +1,2 @@
+/home/denis/StudioProjects/sound_back_erke/android/app/.cxx/Debug/4q3wf1j4/x86/CMakeFiles/edit_cache.dir
+/home/denis/StudioProjects/sound_back_erke/android/app/.cxx/Debug/4q3wf1j4/x86/CMakeFiles/rebuild_cache.dir

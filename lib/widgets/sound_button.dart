@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../models/sound_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,7 +41,8 @@ class SoundButtonWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 button.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),

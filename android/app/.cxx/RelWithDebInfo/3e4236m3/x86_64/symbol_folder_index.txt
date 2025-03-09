@@ -1,0 +1,1 @@
+/home/denis/StudioProjects/sound_back_erke/build/app/intermediates/cxx/RelWithDebInfo/3e4236m3/obj/x86_64
