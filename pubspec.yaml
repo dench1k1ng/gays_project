@@ -35,10 +35,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   flutter_svg: ^2.0.9
   cupertino_icons: ^1.0.8
-  shared_preferences: ^2.5.2
-  cached_network_image: ^3.4.1  # Для кэширования картинок
-  audioplayers: ^6.3.0  # Для воспроизведения звуков
-  provider: ^6.1.2
   dio: ^5.7.0
   shared_preferences: ^2.5.2
   provider: ^6.1.2

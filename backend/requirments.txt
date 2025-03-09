@@ -1,0 +1,10 @@
+Django>=4.2,<5.0
+djangorestframework
+gunicorn
+whitenoise
+psycopg2-binary  # Используется, если PostgreSQL
+mysqlclient  # Если используется MySQL (иначе удали)
+pillow  # Для работы с изображениями
+django-cors-headers  # Для поддержки CORS
+django-environ  # Для работы с переменными окружения
+drf-yasg
