@@ -1,0 +1,2 @@
+/Users/erke/Desktop/gays_project/android/app/.cxx/Debug/1r4f4m22/x86_64/CMakeFiles/edit_cache.dir
+/Users/erke/Desktop/gays_project/android/app/.cxx/Debug/1r4f4m22/x86_64/CMakeFiles/rebuild_cache.dir

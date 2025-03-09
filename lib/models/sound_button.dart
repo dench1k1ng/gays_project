@@ -1,17 +1,25 @@
 class SoundButton {
   final int id;
-  final String text;
-  final String imageUrl;
-  final String audioUrl;
+  final String image;
+  final String audio;
+  final String title;
+  final int category;
 
-  SoundButton({required this.id, required this.text, required this.imageUrl, required this.audioUrl});
+  SoundButton({
+    required this.id,
+    required this.image,
+    required this.audio,
+    required this.title,
+    required this.category,
+  });
 
   factory SoundButton.fromJson(Map<String, dynamic> json) {
     return SoundButton(
       id: json['id'],
-      text: json['text'],
-      imageUrl: json['image_url'],
-      audioUrl: json['audio_url'],
+      image: json['image'],
+      audio: json['audio'],
+      title: json['title'],
+      category: json['category'],
     );
   }
 }
