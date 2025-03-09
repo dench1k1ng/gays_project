@@ -10,6 +10,9 @@ from myapp.models import Category, Card
 
 
 # Путь к медиафайлам
+AUDIO_CHECK_DIR = "../media/audio"
+IMAGE_CHECK_DIR = "../media/images"
+
 AUDIO_DIR = "/audio"
 IMAGE_DIR = "/images"
 
@@ -245,15 +248,19 @@ def load_data():
     for category_name, words in data.items():
         category, _ = Category.objects.get_or_create(name=category_name)
 
-        cards = [
-            Card(
-                category=category,
-                title=rus,
-                audio=os.path.join(AUDIO_DIR, f"{eng}.mp3"),
-                image=os.path.join(IMAGE_DIR, f"{eng}.svg"),
-            )
-            for eng, rus in words
-        ]
-        Card.objects.bulk_create(cards)
+        cards = []
+        for eng, rus in words:
+            audio_path = os.path.join(AUDIO_CHECK_DIR, f"{eng}.mp3")
+            image_path = os.path.join(IMAGE_CHECK_DIR, f"{eng}.svg")
+
+            if os.path.exists(audio_path) and os.path.exists(image_path):
+                cards.append(Card(category=category, title=rus, audio=f"{AUDIO_DIR}/{eng}.mp3", image=f"{IMAGE_DIR}/{eng}.svg"))
+            else:
+                print(f"Файл отсутствует: {audio_path if not os.path.exists(audio_path) else ''} "
+                      f"{image_path if not os.path.exists(image_path) else ''}")
+
+        if cards:
+            Card.objects.bulk_create(cards)
 
 load_data()
+
