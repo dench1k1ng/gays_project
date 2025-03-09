@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Изучай звуки!")),
+      appBar: AppBar(title: const Text("Soz Alem")),
       body: _selectedIndex == 0
           ? FutureBuilder<List<SoundButton>>(
               future: _buttonsFuture,
@@ -77,12 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            label: 'Главная',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.settings),
             icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
+            label: 'Настройки',
           ),
         ],
       ),
@@ -144,9 +144,9 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
                 widget.button.image,
                 placeholderBuilder: (context) =>
                     const CircularProgressIndicator(),
-                height: 100,
-                width: 100,
-                fit: BoxFit.cover,
+                height: 200,
+                width: 200,
+                fit: BoxFit.contain,
               ),
             ),
             Padding(

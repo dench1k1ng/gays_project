@@ -10,11 +10,11 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-              "Settings")), // This will be shown only when navigating
+              "Настройки")), // This will be shown only when navigating
       body: Column(
         children: [
           ListTile(
-            title: const Text("Dark Mode"),
+            title: const Text("Темный режим"),
             trailing: Switch(
               value: settings.themeMode == ThemeMode.dark,
               onChanged: (value) {
@@ -22,21 +22,21 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
           ),
-          ListTile(
-            title: const Text("Language"),
-            trailing: DropdownButton<String>(
-              value: settings.locale.languageCode,
-              onChanged: (String? newLanguage) {
-                if (newLanguage != null) {
-                  settings.changeLanguage(newLanguage);
-                }
-              },
-              items: const [
-                DropdownMenuItem(value: "en", child: Text("English")),
-                DropdownMenuItem(value: "ru", child: Text("Русский")),
-              ],
-            ),
-          ),
+          // ListTile(
+          //   title: const Text("Language"),
+          //   trailing: DropdownButton<String>(
+          //     value: settings.locale.languageCode,
+          //     onChanged: (String? newLanguage) {
+          //       if (newLanguage != null) {
+          //         settings.changeLanguage(newLanguage);
+          //       }
+          //     },
+          //     items: const [
+          //       DropdownMenuItem(value: "en", child: Text("English")),
+          //       DropdownMenuItem(value: "ru", child: Text("Русский")),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
