@@ -35,8 +35,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   flutter_svg: ^2.0.9
   cupertino_icons: ^1.0.8
-  firebase_core: ^3.9.0
-  firebase_auth: ^5.3.4
+  shared_preferences: ^2.5.2
+  cached_network_image: ^3.4.1  # Для кэширования картинок
+  audioplayers: ^6.3.0  # Для воспроизведения звуков
+  provider: ^6.1.2
   dio: ^5.7.0
   shared_preferences: ^2.5.2
   provider: ^6.1.2
@@ -46,6 +48,7 @@ dependencies:
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
 flutter_icons:
@@ -71,30 +74,30 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets:
-     - images/magnum2.png
-     - images/mcdon.png
-     - images/kfcDed.png
-     - images/fermag.jpg
-     - images/faceAvatar.jpeg
-     - images/small.png
-     - images/logo_food_save.jpg
-     - images/small.jpg
-     - images/kfcDed2.jpg
-     - images/beh/bulki.jpg
-     - images/beh/combo.jpg
-     - images/beh/doner.jpg
-     - images/beh/free.jpg
-     - images/beh/lagman.jpg
-     - images/beh/pizza.jpg
-     - images/beh/ploov.jpg
-     - images/beh/sup.jpg
-     - images/gro/app.jpg
-     - images/gro/banana.jpg
-     - images/gro/milk.jpg
-     - images/gro/bread.jpg
-     - images/gro/cokki.jpg
-     - images/gro/straw.jpg
+  # assets:
+  #    - images/magnum2.png
+  #    - images/mcdon.png
+  #    - images/kfcDed.png
+  #    - images/fermag.jpg
+  #    - images/faceAvatar.jpeg
+  #    - images/small.png
+  #    - images/logo_food_save.jpg
+  #    - images/small.jpg
+  #    - images/kfcDed2.jpg
+  #    - images/beh/bulki.jpg
+  #    - images/beh/combo.jpg
+  #    - images/beh/doner.jpg
+  #    - images/beh/free.jpg
+  #    - images/beh/lagman.jpg
+  #    - images/beh/pizza.jpg
+  #    - images/beh/ploov.jpg
+  #    - images/beh/sup.jpg
+  #    - images/gro/app.jpg
+  #    - images/gro/banana.jpg
+  #    - images/gro/milk.jpg
+  #    - images/gro/bread.jpg
+  #    - images/gro/cokki.jpg
+  #    - images/gro/straw.jpg
 
   #   - images/a_dot_ham.jpeg
 
