@@ -22,6 +22,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    final crossAxisCount =
+        isPortrait ? 2 : 5; // ✅ 2 buttons in portrait, 5 in landscape
     return Scaffold(
       appBar: AppBar(title: const Text("Soz Alem")),
       body: _selectedIndex == 0
@@ -48,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 return GridView.builder(
                   padding: const EdgeInsets.all(10),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                     childAspectRatio: 1,
