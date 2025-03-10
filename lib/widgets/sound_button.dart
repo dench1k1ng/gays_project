@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../models/sound_button.dart';
 import '../services/api_service.dart';
 
@@ -15,11 +19,15 @@ class SoundButtonWidget extends StatefulWidget {
 
 class _SoundButtonWidgetState extends State<SoundButtonWidget> {
   late AudioPlayer _audioPlayer;
+  File? _audioFile;
+  File? _imageFile;
+  Color _selectedColor = Colors.blueAccent;
 
   @override
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
+    _selectedColor = _getCategoryColor(widget.button.categoryId);
   }
 
   @override
@@ -28,147 +36,81 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
     super.dispose();
   }
 
-  void _playSound() async {
-    try {
-      await _audioPlayer.stop();
-
-      if (widget.button.audio.isNotEmpty) {
-        await _audioPlayer.setVolume(1.0);
-        print("Попытка воспроизведения: ${widget.button.audio}");
-        await _audioPlayer.play(UrlSource(widget.button.audio));
-
-        _audioPlayer.onPlayerStateChanged.listen((state) {
-          print("Текущее состояние плеера: $state");
-        });
-
-        _audioPlayer.onPlayerComplete.listen((_) {
-          print("Воспроизведение завершено!");
-        });
-      } else {
-        print("Нет аудиофайла для кнопки");
-      }
-    } catch (e) {
-      print("Ошибка воспроизведения: $e");
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() => _imageFile = File(pickedFile.path));
     }
   }
 
+  Future<void> _pickAudio() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (result != null) {
+      setState(() => _audioFile = File(result.files.single.path!));
+    }
+  }
+
+  Future<void> _pickColor() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Выберите цвет"),
+        content: BlockPicker(
+          pickerColor: _selectedColor,
+          onColorChanged: (color) => setState(() => _selectedColor = color),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))
+        ],
+      ),
+    );
+  }
+
   void _editSoundButton() {
-    TextEditingController titleController =
-        TextEditingController(text: widget.button.title);
-    TextEditingController audioController =
-        TextEditingController(text: widget.button.audio);
-    TextEditingController imageController =
-        TextEditingController(text: widget.button.image);
+    TextEditingController titleController = TextEditingController(text: widget.button.title);
 
     showModalBottomSheet(
-      isScrollControlled: true, // ✅ Ensures modal expands when needed
+      isScrollControlled: true,
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final bottomPadding = MediaQuery.of(context)
-                .viewInsets
-                .bottom; // ✅ Detect keyboard height
-            final isPortrait = MediaQuery.of(context).orientation ==
-                Orientation.portrait; // ✅ Detect orientation
-            final initialSize = isPortrait
-                ? 0.4
-                : 0.8; // ✅ Set modal height based on orientation
-            final maxSize =
-                isPortrait ? 0.9 : 1.0; // ✅ Allow full-screen in landscape
-
-            return AnimatedPadding(
-              duration: const Duration(
-                  milliseconds:
-                      300), // ✅ Smooth transition when keyboard appears
-              curve: Curves.easeOut,
-              padding: EdgeInsets.only(
-                  bottom:
-                      bottomPadding), // ✅ Push modal up when keyboard appears
-              child: DraggableScrollableSheet(
-                expand: false,
-                initialChildSize: initialSize, // ✅ Adjust height dynamically
-                minChildSize: 0.4, // ✅ Minimum size when dragged down
-                maxChildSize: maxSize, // ✅ Maximum size when fully expanded
-                builder: (context, scrollController) {
-                  return GestureDetector(
-                    onTap: () => FocusScope.of(context)
-                        .unfocus(), // ✅ Close keyboard when tapping outside
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              "Редактировать кнопку",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 10),
-                            TextField(
-                              controller: titleController,
-                              decoration:
-                                  const InputDecoration(labelText: "Название"),
-                            ),
-                            const SizedBox(height: 10),
-                            TextField(
-                              controller: audioController,
-                              decoration:
-                                  const InputDecoration(labelText: "Аудио URL"),
-                            ),
-                            const SizedBox(height: 10),
-                            TextField(
-                              controller: imageController,
-                              decoration: const InputDecoration(
-                                  labelText: "Изображение URL"),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("Отмена"),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    // ✅ API Call to Update Button
-                                    await ApiService().updateCard(
-                                      widget.button.id,
-                                      titleController.text,
-                                      audioController.text,
-                                      imageController.text,
-                                    );
-
-                                    // ✅ Update UI
-                                    setState(() {
-                                      widget.button.title =
-                                          titleController.text;
-                                      widget.button.audio =
-                                          audioController.text;
-                                      widget.button.image =
-                                          imageController.text;
-                                    });
-
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Сохранить"),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      ),
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Редактировать кнопку", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextField(controller: titleController, decoration: InputDecoration(labelText: "Название")),
+                ElevatedButton(onPressed: _pickImage, child: Text("Выбрать изображение")),
+                ElevatedButton(onPressed: _pickAudio, child: Text("Выбрать аудио")),
+                ElevatedButton(onPressed: _pickColor, child: Text("Выбрать цвет")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(onPressed: () => Navigator.pop(context), child: Text("Отмена")),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await ApiService().updateCard(
+                          widget.button.id,
+                          titleController.text,
+                          _audioFile?.path ?? widget.button.audio,
+                          _imageFile?.path ?? widget.button.image,
+                        );
+                        setState(() {
+                          widget.button.title = titleController.text;
+                          widget.button.audio = _audioFile?.path ?? widget.button.audio;
+                          widget.button.image = _imageFile?.path ?? widget.button.image;
+                          widget.button.categoryId = _selectedColor.value;
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("Сохранить"),
                     ),
-                  );
-                },
-              ),
-            );
-          },
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -177,36 +119,24 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: _playSound,
-      onLongPress: _editSoundButton, // ✅ Открываем редактор по долгому нажатию
+      onTap: () => _audioPlayer.play(UrlSource(widget.button.audio)),
+      onLongPress: _editSoundButton,
       child: Card(
-        color: _getCategoryColor(widget.button.categoryId),
+        color: _selectedColor,
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: SvgPicture.network(
-                widget.button.image,
-                placeholderBuilder: (context) =>
-                    const CircularProgressIndicator(),
-                height: 200,
-                width: 200,
-                fit: BoxFit.contain,
-              ),
+              child: _imageFile != null
+                  ? Image.file(_imageFile!, height: 200, width: 200, fit: BoxFit.contain)
+                  : SvgPicture.network(widget.button.image, placeholderBuilder: (context) => CircularProgressIndicator()),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.button.title,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
+              child: Text(widget.button.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
             ),
           ],
         ),
@@ -217,24 +147,10 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
 
 Color _getCategoryColor(int categoryId) {
   List<Color> categoryColors = [
-    Colors.blueAccent,
-    Colors.greenAccent,
-    Colors.orangeAccent,
-    Colors.purpleAccent,
-    Colors.redAccent,
-    Colors.yellowAccent,
-    Colors.tealAccent,
-    Colors.pinkAccent,
-    Colors.indigoAccent,
-    Colors.cyanAccent,
-    Colors.brown,
-    Colors.limeAccent,
-    Colors.amberAccent,
-    Colors.deepOrangeAccent,
-    Colors.lightBlueAccent,
+    Colors.blueAccent, Colors.greenAccent, Colors.orangeAccent, Colors.purpleAccent,
+    Colors.redAccent, Colors.yellowAccent, Colors.tealAccent, Colors.pinkAccent,
+    Colors.indigoAccent, Colors.cyanAccent, Colors.brown, Colors.limeAccent,
+    Colors.amberAccent, Colors.deepOrangeAccent, Colors.lightBlueAccent,
   ];
-
-  return categoryId > 0 && categoryId <= categoryColors.length
-      ? categoryColors[categoryId - 1] // ✅ Get the correct color from the list
-      : Colors.grey; // Default color for unknown categories
+  return categoryId > 0 && categoryId <= categoryColors.length ? categoryColors[categoryId - 1] : Colors.grey;
 }
