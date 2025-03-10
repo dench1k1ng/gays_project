@@ -147,11 +147,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   itemCount: validButtons.length,
                   itemBuilder: (context, index) {
-                    return SoundButtonWidget(
-                      button: validButtons[index],
-                      onAddToQueue: () => _addToQueue(validButtons[index]),
+                    return GestureDetector(
+                      child: SoundButtonWidget(
+                        button: validButtons[index],
+                        onAddToQueue: () => _addToQueue(validButtons[index]),
+                      ),
                     );
                   },
+
                 ),
               ),
             ],

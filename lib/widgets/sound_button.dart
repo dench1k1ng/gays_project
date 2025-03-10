@@ -40,12 +40,91 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
     _audioPlayer.dispose();
     super.dispose();
   }
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() => _imageFile = File(pickedFile.path));
+    }
+  }
+
+  Future<void> _pickAudio() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (result != null) {
+      setState(() => _audioFile = File(result.files.single.path!));
+    }
+  }
+
+  Future<void> _pickColor() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Выберите цвет"),
+        content: BlockPicker(
+          pickerColor: _selectedColor,
+          onColorChanged: (color) => setState(() => _selectedColor = color),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))
+        ],
+      ),
+    );
+  }
+
+  void _editSoundButton() {
+    TextEditingController titleController = TextEditingController(text: widget.button.title);
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Редактировать кнопку", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextField(controller: titleController, decoration: InputDecoration(labelText: "Название")),
+                ElevatedButton(onPressed: _pickImage, child: Text("Выбрать изображение")),
+                ElevatedButton(onPressed: _pickAudio, child: Text("Выбрать аудио")),
+                ElevatedButton(onPressed: _pickColor, child: Text("Выбрать цвет")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(onPressed: () => Navigator.pop(context), child: Text("Отмена")),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await ApiService().updateCard(
+                          widget.button.id,
+                          titleController.text,
+                          _audioFile?.path ?? widget.button.audio,
+                          _imageFile?.path ?? widget.button.image,
+                        );
+                        setState(() {
+                          widget.button.title = titleController.text;
+                          widget.button.audio = _audioFile?.path ?? widget.button.audio;
+                          widget.button.image = _imageFile?.path ?? widget.button.image;
+                          widget.button.categoryId = _selectedColor.value;
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("Сохранить"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => _audioPlayer.play(UrlSource(widget.button.audio)),
-      onLongPress: widget.onAddToQueue, // Добавляем в очередь при долгом нажатии
+      onLongPress: _editSoundButton, // Добавляем в очередь при долгом нажатии
       child: Card(
         color: _selectedColor,
         elevation: 4,
