@@ -4,6 +4,7 @@ import 'package:soz_alem/widgets/sound_button.dart';
 import '../services/api_service.dart';
 import '../models/sound_button.dart';
 import 'settings_screen.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -42,15 +43,42 @@ class _HomeScreenState extends State<HomeScreen> {
       _isPlayingQueue = true;
     });
 
-    for (var button in _queue) {
-      await _audioPlayer.play(UrlSource(button.audio));
-      await Future.delayed(Duration(seconds: 2)); // Небольшая задержка перед следующим
+    for (int i = 0; i < _queue.length; i++) {
+      await _playSound(_queue[i]);
     }
 
     setState(() {
       _isPlayingQueue = false;
     });
   }
+  Future<void> _playSound(SoundButton button) async {
+    Completer<void> completer = Completer<void>();
+
+    _audioPlayer.play(UrlSource(button.audio));
+
+    _audioPlayer.onPlayerComplete.listen((_) {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    });
+
+    await completer.future;
+  }
+  Future<void> _playNext(int index) async {
+    if (index >= _queue.length) {
+      setState(() {
+        _isPlayingQueue = false;
+      });
+      return;
+    }
+
+    await _audioPlayer.play(UrlSource(_queue[index].audio));
+
+    _audioPlayer.onPlayerComplete.listen((_) {
+      _playNext(index + 1);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
