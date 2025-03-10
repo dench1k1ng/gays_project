@@ -1,10 +1,12 @@
 class SoundButton {
-  final String image;
-  final String audio;
-  final String title;
-  final int categoryId; // ✅ Ensure it's an integer
+   int id;
+   String image;
+   String audio;
+   String title;
+   int categoryId;
 
   SoundButton({
+    required this.id,
     required this.image,
     required this.audio,
     required this.title,
@@ -13,6 +15,7 @@ class SoundButton {
 
   factory SoundButton.fromJson(Map<String, dynamic> json) {
     return SoundButton(
+      id: json['id'], // ✅ Добавляем ID
       image: json['image'],
       audio: json['audio'],
       title: json['title'],

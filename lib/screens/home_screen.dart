@@ -4,6 +4,7 @@ import '../services/api_service.dart';
 import '../models/sound_button.dart';
 import 'settings_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'edit_soundbutton_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -121,10 +122,20 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
 
   void _playSound() async {
     try {
-      await _audioPlayer.stop(); // Stop any currently playing audio
+      await _audioPlayer.stop();
 
       if (widget.button.audio.isNotEmpty) {
+        await _audioPlayer.setVolume(1.0);
+        print("Попытка воспроизведения: ${widget.button.audio}");
         await _audioPlayer.play(UrlSource(widget.button.audio));
+
+        _audioPlayer.onPlayerStateChanged.listen((state) {
+          print("Текущее состояние плеера: $state");
+        });
+
+        _audioPlayer.onPlayerComplete.listen((_) {
+          print("Воспроизведение завершено!");
+        });
       } else {
         print("Нет аудиофайла для кнопки");
       }
@@ -133,11 +144,73 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
     }
   }
 
+  void _editSoundButton() {
+    TextEditingController titleController = TextEditingController(text: widget.button.title);
+    TextEditingController audioController = TextEditingController(text: widget.button.audio);
+    TextEditingController imageController = TextEditingController(text: widget.button.image);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Редактировать кнопку"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: "Название"),
+              ),
+              TextField(
+                controller: audioController,
+                decoration: const InputDecoration(labelText: "Аудио URL"),
+              ),
+              TextField(
+                controller: imageController,
+                decoration: const InputDecoration(labelText: "Изображение URL"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Отмена"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                // Вызываем API для обновления карточки
+                await ApiService().updateCard(
+                  widget.button.id,
+                  titleController.text,
+                  audioController.text,
+                  imageController.text,
+                );
+
+                // Обновляем UI после сохранения
+                setState(() {
+                  widget.button.title = titleController.text;
+                  widget.button.audio = audioController.text;
+                  widget.button.image = imageController.text;
+                });
+
+                Navigator.pop(context);
+              },
+              child: const Text("Сохранить"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: _playSound,
-      child: Card.filled(
+      onLongPress: _editSoundButton, // ✅ Открываем редактор по долгому нажатию
+      child: Card(
         color: _getCategoryColor(widget.button.categoryId),
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -150,8 +223,7 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
             Expanded(
               child: SvgPicture.network(
                 widget.button.image,
-                placeholderBuilder: (context) =>
-                    const CircularProgressIndicator(),
+                placeholderBuilder: (context) => const CircularProgressIndicator(),
                 height: 200,
                 width: 200,
                 fit: BoxFit.contain,
@@ -161,8 +233,7 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 widget.button.title,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -170,6 +241,9 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
         ),
       ),
     );
+
+
+
   }
 }
 

@@ -1,18 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg height="800px" width="800px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 512 512"  xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#000000;}
-</style>
-<g>
-	<path class="st0" d="M329.31,195.497c0-37.245,44.218-67.499,44.218-96.59c0-18.02-13.153-33.706-32.578-41.814V0h-16.289v52.39
-		c-4.505-0.775-9.172-1.189-13.965-1.189c-23.461,0-43.894,9.766-54.687,24.218c-10.794-14.451-31.246-24.218-54.706-24.218
-		c-4.794,0-9.46,0.414-13.965,1.189V0H171.05v57.092c-19.406,8.108-32.579,23.794-32.579,41.814
-		c0,29.091,44.219,59.345,44.219,96.59c0,116.358-88.437,104.727-88.437,265.302c0,0,16.289,18.623,74.472,18.623
-		c37.317,0,47.714,32.578,87.284,32.578c39.552,0,49.948-32.578,87.265-32.578c58.184,0,74.473-18.623,74.473-18.623
-		C417.747,300.224,329.31,311.854,329.31,195.497z"/>
-</g>
-</svg>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fxemoji" preserveAspectRatio="xMidYMid meet" fill="#000000">
+<g id="SVGRepo_bgCarrier" stroke-width="0"/>
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="SVGRepo_iconCarrier">
+<path fill="#00D1AE" d="M47.6 31.7s1.9-8.6 3.9-14.5c.1-.4.2-.7.2-1c.1-.7.2-1.4.2-2.2c0-2.8-3.3-6.7-5.5-6.7c-2.7 0-6.1 2.3-8.6 4.4c-.5.4-1.1.4-1.6 0c-2.4-2.1-5.6-4.4-8.6-4.4c-2.2 0-5.5 3.9-5.5 6.7c0 1.9.3 3.4.9 4.6c1.8 5.6 3.2 12.7 3.3 13.1c-3.5 3.6-12.6 34.7-12.6 34.7s2.5 3.3 12.4 4.9l.1-.9l2.1.3l-.1.9c2.5.3 5.4.5 8.8.5c3.4 0 6.3-.2 8.8-.5l-.1-.9l2.1-.3l.1.9c10-1.5 12.4-4.9 12.4-4.9S50.9 35 47.6 31.7z"/>
+<path fill="#00B89C" d="M37 33.5c-7.4 0-10.8-1.1-11-1.2c-.7-.2-.5-2.9.2-2.7c0 0 3.8 1.1 10.8 1.1c7 0 10.5-1 10.5-1c.7-.2 1 2.4.3 2.7c-.1 0-3.3 1.1-10.8 1.1zm-5.7 10.1c-.8 0-5.2 27.6-5.2 27.6l2.1.2s3.9-27.8 3.1-27.8zm11.4 0c.8 0 5.2 27.6 5.2 27.6l-2.1.2s-3.9-27.8-3.1-27.8zm4.1-36.3V1.9c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4v7.3c-.9-1-1.9-1.7-2.8-1.9zM24.5 9.1V1.9c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4v5.4c-.9.1-2 .8-2.8 1.8z"/>
+</g>
+</svg>
