@@ -31,9 +31,12 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
   }
 
   void _editSoundButton() {
-    TextEditingController titleController = TextEditingController(text: widget.button.title);
-    TextEditingController audioController = TextEditingController(text: widget.button.audio);
-    TextEditingController imageController = TextEditingController(text: widget.button.image);
+    TextEditingController titleController =
+        TextEditingController(text: widget.button.title);
+    TextEditingController audioController =
+        TextEditingController(text: widget.button.audio);
+    TextEditingController imageController =
+        TextEditingController(text: widget.button.image);
 
     showDialog(
       context: context,
@@ -89,7 +92,6 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
     );
   }
 
-
   void _playSound() async {
     try {
       await _audioPlayer.stop();
@@ -105,7 +107,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
 
   Future<void> _updateButton() async {
     try {
-      final response = await _dio.put('http://10.0.2.2:8000/api/cards/${widget.button.id}');
+      final response =
+          await _dio.put('http://10.0.2.2:8000/api/cards/${widget.button.id}');
       if (response.statusCode == 200) {
         print("✅ Карточка ${widget.button.id} обновлена");
       } else {
@@ -159,7 +162,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
               Expanded(
                 child: SvgPicture.network(
                   widget.button.image,
-                  placeholderBuilder: (context) => const CircularProgressIndicator(),
+                  placeholderBuilder: (context) =>
+                      const CircularProgressIndicator(),
                   height: 100,
                   width: 100,
                   fit: BoxFit.cover,

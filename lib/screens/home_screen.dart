@@ -4,7 +4,6 @@ import '../services/api_service.dart';
 import '../models/sound_button.dart';
 import 'settings_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'edit_soundbutton_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -145,65 +144,126 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
   }
 
   void _editSoundButton() {
-    TextEditingController titleController = TextEditingController(text: widget.button.title);
-    TextEditingController audioController = TextEditingController(text: widget.button.audio);
-    TextEditingController imageController = TextEditingController(text: widget.button.image);
+    TextEditingController titleController =
+        TextEditingController(text: widget.button.title);
+    TextEditingController audioController =
+        TextEditingController(text: widget.button.audio);
+    TextEditingController imageController =
+        TextEditingController(text: widget.button.image);
 
-    showDialog(
+    showModalBottomSheet(
+      isScrollControlled: true, // ✅ Ensures modal expands when needed
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Редактировать кнопку"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: "Название"),
-              ),
-              TextField(
-                controller: audioController,
-                decoration: const InputDecoration(labelText: "Аудио URL"),
-              ),
-              TextField(
-                controller: imageController,
-                decoration: const InputDecoration(labelText: "Изображение URL"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Отмена"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // Вызываем API для обновления карточки
-                await ApiService().updateCard(
-                  widget.button.id,
-                  titleController.text,
-                  audioController.text,
-                  imageController.text,
-                );
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final bottomPadding = MediaQuery.of(context)
+                .viewInsets
+                .bottom; // ✅ Detect keyboard height
+            final isPortrait = MediaQuery.of(context).orientation ==
+                Orientation.portrait; // ✅ Detect orientation
+            final initialSize = isPortrait
+                ? 0.4
+                : 0.8; // ✅ Set modal height based on orientation
+            final maxSize =
+                isPortrait ? 0.9 : 1.0; // ✅ Allow full-screen in landscape
 
-                // Обновляем UI после сохранения
-                setState(() {
-                  widget.button.title = titleController.text;
-                  widget.button.audio = audioController.text;
-                  widget.button.image = imageController.text;
-                });
+            return AnimatedPadding(
+              duration: const Duration(
+                  milliseconds:
+                      300), // ✅ Smooth transition when keyboard appears
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(
+                  bottom:
+                      bottomPadding), // ✅ Push modal up when keyboard appears
+              child: DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: initialSize, // ✅ Adjust height dynamically
+                minChildSize: 0.4, // ✅ Minimum size when dragged down
+                maxChildSize: maxSize, // ✅ Maximum size when fully expanded
+                builder: (context, scrollController) {
+                  return GestureDetector(
+                    onTap: () => FocusScope.of(context)
+                        .unfocus(), // ✅ Close keyboard when tapping outside
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              "Редактировать кнопку",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: titleController,
+                              decoration:
+                                  const InputDecoration(labelText: "Название"),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: audioController,
+                              decoration:
+                                  const InputDecoration(labelText: "Аудио URL"),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: imageController,
+                              decoration: const InputDecoration(
+                                  labelText: "Изображение URL"),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("Отмена"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    // ✅ API Call to Update Button
+                                    await ApiService().updateCard(
+                                      widget.button.id,
+                                      titleController.text,
+                                      audioController.text,
+                                      imageController.text,
+                                    );
 
-                Navigator.pop(context);
-              },
-              child: const Text("Сохранить"),
-            ),
-          ],
+                                    // ✅ Update UI
+                                    setState(() {
+                                      widget.button.title =
+                                          titleController.text;
+                                      widget.button.audio =
+                                          audioController.text;
+                                      widget.button.image =
+                                          imageController.text;
+                                    });
+
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Сохранить"),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +283,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
             Expanded(
               child: SvgPicture.network(
                 widget.button.image,
-                placeholderBuilder: (context) => const CircularProgressIndicator(),
+                placeholderBuilder: (context) =>
+                    const CircularProgressIndicator(),
                 height: 200,
                 width: 200,
                 fit: BoxFit.contain,
@@ -233,7 +294,8 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 widget.button.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -241,9 +303,6 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
         ),
       ),
     );
-
-
-
   }
 }
 

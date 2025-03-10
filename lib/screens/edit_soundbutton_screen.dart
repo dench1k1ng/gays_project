@@ -32,41 +32,62 @@ class _EditButtonScreenState extends State<EditButtonScreen> {
   }
 
   void _saveChanges() {
-    // Здесь можно добавить логику сохранения изменений в API
     print("Изменения сохранены:");
     print("Название: ${_titleController.text}");
     print("Аудио: ${_audioController.text}");
     print("Изображение: ${_imageController.text}");
 
-    Navigator.pop(context); // Закрываем экран редактирования
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Редактирование кнопки")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: "Название"),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(), // ✅ Close keyboard on tap
+      child: Scaffold(
+        resizeToAvoidBottomInset: true, // ✅ Prevents overflow
+        appBar: AppBar(title: Text("Редактировать кнопку")),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(labelText: "Название"),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _audioController,
+                  decoration: InputDecoration(labelText: "Аудио URL"),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _imageController,
+                  decoration: InputDecoration(labelText: "Изображение URL"),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("Отмена"),
+                    ),
+                    ElevatedButton(
+                      onPressed: _saveChanges,
+                      child: const Text("Сохранить"),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.of(context)
+                        .viewInsets
+                        .bottom), // ✅ Fix for bottom spacing
+              ],
             ),
-            TextField(
-              controller: _audioController,
-              decoration: InputDecoration(labelText: "Ссылка на аудио"),
-            ),
-            TextField(
-              controller: _imageController,
-              decoration: InputDecoration(labelText: "Ссылка на изображение"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveChanges,
-              child: const Text("Сохранить"),
-            ),
-          ],
+          ),
         ),
       ),
     );
