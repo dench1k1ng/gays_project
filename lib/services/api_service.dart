@@ -1,21 +1,26 @@
 import 'package:dio/dio.dart';
+import 'package:soz_alem/models/category_model.dart';
 import 'dart:developer';
 import '../models/sound_button.dart';
 
 class ApiService {
   final Dio _dio = Dio();
+  List<SoundButton> _cachedButtons = []; // Cache to avoid multiple API calls
 
+  // ✅ Fetch all sound buttons
   Future<List<SoundButton>> fetchButtons() async {
     try {
-      log("⏳ Отправка запроса к API...");
+      log("⏳ Fetching all sound buttons...");
       final response = await _dio.get('http://10.0.2.2:8000/api/cards/');
 
-      log("✅ Ответ от API: ${response.statusCode}");
-      log("📄 Данные: ${response.data}");
+      log("✅ API Response: ${response.statusCode}");
+      log("📄 Data: ${response.data}");
 
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        return data.map((json) => SoundButton.fromJson(json)).toList();
+        _cachedButtons =
+            data.map((json) => SoundButton.fromJson(json)).toList();
+        return _cachedButtons;
       } else {
         throw Exception("Ошибка загрузки данных. Код: ${response.statusCode}");
       }
@@ -25,10 +30,35 @@ class ApiService {
     }
   }
 
-  // ✅ Метод для обновления карточки
-  Future<void> updateCard(int id, String title, String audio, String image) async {
+  // ✅ Generate categories dynamically by watching `categoryId`
+  Future<List<Category>> fetchCategoriesFromButtons() async {
+    await fetchButtons(); // Ensure we have data
+
+    Set<int> categoryIds =
+        _cachedButtons.map((button) => button.categoryId).toSet();
+    List<Category> categories = categoryIds
+        .map((id) => Category(
+            id: id, name: "Category $id")) // Generate names dynamically
+        .toList();
+
+    return categories;
+  }
+
+  // ✅ Fetch sound buttons by category
+  Future<List<SoundButton>> fetchButtonsByCategory(int categoryId) async {
+    if (_cachedButtons.isEmpty) {
+      await fetchButtons(); // Ensure data is loaded
+    }
+    return _cachedButtons
+        .where((button) => button.categoryId == categoryId)
+        .toList();
+  }
+
+  // ✅ Update sound button
+  Future<void> updateCard(
+      int id, String title, String audio, String image) async {
     try {
-      log("⏳ Отправка PUT-запроса для обновления карточки $id...");
+      log("⏳ Updating sound button $id...");
 
       final response = await _dio.put(
         'http://10.0.2.2:8000/api/cards/$id/',
@@ -40,13 +70,12 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        log("✅ Карточка $id успешно обновлена");
+        log("✅ Sound button $id successfully updated");
       } else {
-        log("⚠️ Ошибка обновления карточки $id: ${response.statusCode}");
+        log("⚠️ Error updating sound button $id: ${response.statusCode}");
       }
     } catch (e) {
-      log("❌ Ошибка при обновлении карточки $id: $e");
+      log("❌ Error updating sound button $id: $e");
     }
   }
-
 }

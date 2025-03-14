@@ -8,9 +8,6 @@ class SettingsScreen extends StatelessWidget {
     final settings = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-              "Настройки")), // This will be shown only when navigating
       body: Column(
         children: [
           ListTile(
