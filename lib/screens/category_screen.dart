@@ -82,7 +82,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category.name),
+        title: Text(_getCategoryTitle(widget.category.id)), // Dynamic title
         actions: [
           IconButton(
             icon: Icon(Icons.play_arrow),
@@ -148,5 +148,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
         },
       ),
     );
+  }
+
+  // **Switch-Case Function for Dynamic AppBar Title**
+  String _getCategoryTitle(int categoryId) {
+    switch (categoryId) {
+      case 1:
+        return 'Еда';
+      case 2:
+        return 'Одежда';
+      case 3:
+        return 'Транспорт';
+      case 4:
+        return 'Животные';
+      case 5:
+        return 'Мебель';
+      case 7:
+        return 'Канцелярия';
+      case 8:
+        return 'Звёзды';
+      case 10:
+        return 'Деятельность';
+      case 11:
+        return 'Места';
+      case 12:
+        return 'Эмоции';
+      case 13:
+        return 'Боль';
+      case 14:
+        return 'Вещи';
+      default:
+        return widget.category.name; // Use original category name if no match
+    }
   }
 }

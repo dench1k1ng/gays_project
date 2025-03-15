@@ -72,32 +72,21 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  # assets:
-  #    - images/magnum2.png
-  #    - images/mcdon.png
-  #    - images/kfcDed.png
-  #    - images/fermag.jpg
-  #    - images/faceAvatar.jpeg
-  #    - images/small.png
-  #    - images/logo_food_save.jpg
-  #    - images/small.jpg
-  #    - images/kfcDed2.jpg
-  #    - images/beh/bulki.jpg
-  #    - images/beh/combo.jpg
-  #    - images/beh/doner.jpg
-  #    - images/beh/free.jpg
-  #    - images/beh/lagman.jpg
-  #    - images/beh/pizza.jpg
-  #    - images/beh/ploov.jpg
-  #    - images/beh/sup.jpg
-  #    - images/gro/app.jpg
-  #    - images/gro/banana.jpg
-  #    - images/gro/milk.jpg
-  #    - images/gro/bread.jpg
-  #    - images/gro/cokki.jpg
-  #    - images/gro/straw.jpg
+  assets:
+    - assets/png/food.png
+    - assets/png/clothes.png
+    - assets/png/transport.png
+    - assets/png/animals.png
+    - assets/png/furniture.png
+    - assets/png/stationery.png
+    - assets/png/stars.png
+    - assets/png/activities.png
+    - assets/png/places.png
+    - assets/png/emotions.png
+    - assets/png/pain.png
+    - assets/png/things.png
+    - assets/png/default_category.png
 
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

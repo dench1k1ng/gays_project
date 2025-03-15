@@ -143,37 +143,104 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // **Category Card UI**
   Widget _buildCategoryCard(Category category, bool isDarkMode) {
+    String imagePath;
+    String displayName;
+
+    // **Manually assign images and text based on category.id or category.name**
+    switch (category.id) {
+      case 1:
+        imagePath = 'assets/png/food.png';
+        displayName = 'Еда';
+        break;
+      case 2:
+        imagePath = 'assets/png/clothes.png';
+        displayName = 'Одежда';
+        break;
+      case 3:
+        imagePath = 'assets/png/transport.png';
+        displayName = 'Транспорт';
+        break;
+      case 4:
+        imagePath = 'assets/png/animals.png';
+        displayName = 'Животные';
+        break;
+      case 5:
+        imagePath = 'assets/png/furniture.png';
+        displayName = 'Мебель';
+        break;
+      case 7:
+        imagePath = 'assets/png/stationery.png';
+        displayName = 'Канцелярия';
+        break;
+      case 8:
+        imagePath = 'assets/png/stars.png';
+        displayName = 'Звёзды';
+        break;
+      case 10:
+        imagePath = 'assets/png/activities.png';
+        displayName = 'Деятельность';
+        break;
+      case 11:
+        imagePath = 'assets/png/places.png';
+        displayName = 'Места';
+        break;
+      case 12:
+        imagePath = 'assets/png/emotions.png';
+        displayName = 'Эмоции';
+        break;
+      case 13:
+        imagePath = 'assets/png/pain.png';
+        displayName = 'Боль';
+        break;
+      case 14:
+        imagePath = 'assets/png/things.png';
+        displayName = 'Вещи';
+        break;
+      default:
+        imagePath = 'assets/png/default_category.png'; // Default image
+        displayName = category.name; // Use original category name if not listed
+        break;
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 300),
-            pageBuilder: (_, __, ___) => CategoryScreen(category: category),
-            transitionsBuilder: (_, animation, __, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-          ),
+          MaterialPageRoute(
+              builder: (context) => CategoryScreen(category: category)),
         );
       },
       child: Card(
-        color: isDarkMode ? Colors.grey[850] : Colors.white,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Icon(Icons.music_note,
-                size: 50, color: isDarkMode ? Colors.yellow : Colors.blue),
-            SizedBox(height: 10),
-            Text(
-              category.name,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black87,
+            // **Background Image**
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                imagePath,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
               ),
-              textAlign: TextAlign.center,
+            ),
+            // **Overlay with Text**
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                displayName,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
@@ -181,83 +248,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-/*Widget _buildCategoryCard(Category category, bool isDarkMode) {
-  String imagePath;
-  String displayName;
-
-  // **Manually assign images and text based on category.id or category.name**
-  switch (category.id) {
-    case 1:
-      imagePath = 'assets/animals.png';
-      displayName = 'Животные';
-      break;
-    case 2:
-      imagePath = 'assets/music.png';
-      displayName = 'Музыка';
-      break;
-    case 3:
-      imagePath = 'assets/sports.png';
-      displayName = 'Спорт';
-      break;
-    case 4:
-      imagePath = 'assets/nature.png';
-      displayName = 'Природа';
-      break;
-    case 5:
-      imagePath = 'assets/vehicles.png';
-      displayName = 'Транспорт';
-      break;
-    default:
-      imagePath = 'assets/default_category.png'; // Default image
-      displayName = category.name; // Use original category name
-      break;
-  }
-
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CategoryScreen(category: category)),
-      );
-    },
-    child: Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Stack(
-        children: [
-          // **Background Image**
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              imagePath,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // **Overlay with Text**
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              displayName,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-*/
