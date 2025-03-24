@@ -1,5 +1,9 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:soz_alem/models/category_model.dart';
+import 'package:soz_alem/models/sound_button.dart';
+import 'package:soz_alem/providers/queue_provider.dart';
 import '../services/api_service.dart';
 import 'category_screen.dart';
 import 'settings_screen.dart'; // Ensure this screen exists
@@ -29,6 +33,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _playQueue() async {
+    final queue = context.read<QueueProvider>().queue;
+    if (queue.isEmpty) return;
+
+    final AudioPlayer _audioPlayer = AudioPlayer();
+    for (SoundButton button in List.from(queue)) {
+      await _audioPlayer.play(UrlSource(button.audio));
+      await _audioPlayer.onPlayerComplete.first;
+    }
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -40,6 +55,45 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Widget _buildQueueBar() {
+    final queue = context.watch<QueueProvider>().queue;
+
+    if (queue.isEmpty) return SizedBox.shrink();
+
+    return Column(
+      children: [
+        Container(
+          height: 100,
+          padding: const EdgeInsets.all(8),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: queue.map((btn) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Chip(label: Text(btn.title)),
+              );
+            }).toList(),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: Icon(Icons.play_arrow),
+              onPressed: _playQueue,
+              tooltip: "Играть очередь",
+            ),
+            IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () => context.read<QueueProvider>().clearQueue(),
+              tooltip: "Очистить очередь",
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -74,8 +128,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: _selectedIndex == 0
-          ? _buildCategoriesGrid(isDarkMode) // Home Screen (Categories)
-          : SettingsScreen(), // Settings Screen (Replace with your settings page)
+          ? Column(
+              children: [
+                _buildQueueBar(), // 👈 сюда вставляем очередь
+                Expanded(
+                    child: _buildCategoriesGrid(
+                        isDarkMode)), // или _buildCategoriesGrid
+              ],
+            )
+          : _selectedIndex == 1
+              ? _buildCategoriesGrid(isDarkMode)
+              : SettingsScreen(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onTabSelected,

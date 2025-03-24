@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:provider/provider.dart';
+import 'package:soz_alem/providers/queue_provider.dart';
 import '../models/sound_button.dart';
 import '../services/api_service.dart';
 
@@ -163,7 +165,9 @@ class _SoundButtonWidgetState extends State<SoundButtonWidget> {
                   textAlign: TextAlign.center),
             ),
             ElevatedButton(
-              onPressed: widget.onAddToQueue,
+              onPressed: () {
+                context.read<QueueProvider>().addToQueue(widget.button);
+              },
               child: Text("В очередь"),
             ),
           ],
