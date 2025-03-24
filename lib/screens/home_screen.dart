@@ -1,6 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soz_alem/data/category_meta_map.dart';
+import 'package:soz_alem/models/category_meta_model.dart';
 import 'package:soz_alem/models/category_model.dart';
 import 'package:soz_alem/models/sound_button.dart';
 import 'package:soz_alem/providers/queue_provider.dart';
@@ -19,6 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
   TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 0; // Tracks the selected tab
+
+  String getDisplayTitle(Category category) {
+    return categoryMetaMap[category.id]?.title ?? category.name;
+  }
 
   @override
   void initState() {
@@ -71,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
             scrollDirection: Axis.horizontal,
             children: queue.map((btn) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Chip(label: Text(btn.title)),
               );
             }).toList(),
@@ -178,11 +184,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
         List<Category> categories = snapshot.data!;
         if (_isSearching) {
-          categories = categories
-              .where((category) => category.name
-                  .toLowerCase()
-                  .contains(_searchController.text.toLowerCase()))
-              .toList();
+          final query = _searchController.text.toLowerCase();
+
+          categories = categories.where((category) {
+            final title = getDisplayTitle(category).toLowerCase();
+            return title.contains(query);
+          }).toList();
         }
 
         return Padding(
@@ -206,64 +213,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // **Category Card UI**
   Widget _buildCategoryCard(Category category, bool isDarkMode) {
-    String imagePath;
-    String displayName;
+    final meta = categoryMetaMap[category.id];
 
-    // **Manually assign images and text based on category.id or category.name**
-    switch (category.id) {
-      case 1:
-        imagePath = 'assets/png/food.png';
-        displayName = 'Еда';
-        break;
-      case 2:
-        imagePath = 'assets/png/clothes.png';
-        displayName = 'Одежда';
-        break;
-      case 3:
-        imagePath = 'assets/png/transport.png';
-        displayName = 'Транспорт';
-        break;
-      case 4:
-        imagePath = 'assets/png/animals.png';
-        displayName = 'Животные';
-        break;
-      case 5:
-        imagePath = 'assets/png/furniture.png';
-        displayName = 'Мебель';
-        break;
-      case 7:
-        imagePath = 'assets/png/stationery.png';
-        displayName = 'Канцелярия';
-        break;
-      case 8:
-        imagePath = 'assets/png/stars.png';
-        displayName = 'Звёзды';
-        break;
-      case 10:
-        imagePath = 'assets/png/activities.png';
-        displayName = 'Деятельность';
-        break;
-      case 11:
-        imagePath = 'assets/png/places.png';
-        displayName = 'Места';
-        break;
-      case 12:
-        imagePath = 'assets/png/emotions.png';
-        displayName = 'Эмоции';
-        break;
-      case 13:
-        imagePath = 'assets/png/pain.png';
-        displayName = 'Боль';
-        break;
-      case 14:
-        imagePath = 'assets/png/things.png';
-        displayName = 'Вещи';
-        break;
-      default:
-        imagePath = 'assets/png/default_category.png'; // Default image
-        displayName = category.name; // Use original category name if not listed
-        break;
-    }
+    final imagePath = meta?.imagePath ?? 'assets/png/default_category.png';
+    final title = meta?.title ?? category.name;
+    final color = meta?.color ?? Colors.grey;
 
     return GestureDetector(
       onTap: () {
@@ -296,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               alignment: Alignment.center,
               child: Text(
-                displayName,
+                title,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

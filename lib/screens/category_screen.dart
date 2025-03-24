@@ -33,27 +33,27 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
-  void _clearQueue() {
-    setState(() {
-      _queue.clear();
-    });
-  }
+  // void _clearQueue() {
+  //   setState(() {
+  //     _queue.clear();
+  //   });
+  // }
 
-  Future<void> _playQueue() async {
-    if (_queue.isEmpty || _isPlayingQueue) return;
+  // Future<void> _playQueue() async {
+  //   if (_queue.isEmpty || _isPlayingQueue) return;
 
-    setState(() {
-      _isPlayingQueue = true;
-    });
+  //   setState(() {
+  //     _isPlayingQueue = true;
+  //   });
 
-    for (var button in List.from(_queue)) {
-      await _playSound(button);
-    }
+  //   for (var button in List.from(_queue)) {
+  //     await _playSound(button);
+  //   }
 
-    setState(() {
-      _isPlayingQueue = false;
-    });
-  }
+  //   setState(() {
+  //     _isPlayingQueue = false;
+  //   });
+  // }
 
   Future<void> _playSound(SoundButton button) async {
     Completer<void> completer = Completer<void>();
@@ -79,22 +79,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     final crossAxisCount = isPortrait ? 2 : 5;
+    String displayName = _getCategoryTitle(widget.category.id);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getCategoryTitle(widget.category.id)), // Dynamic title
-        actions: [
-          IconButton(
-            icon: Icon(Icons.play_arrow),
-            onPressed: _playQueue,
-            tooltip: "Играть очередь",
-          ),
-          IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: _clearQueue,
-            tooltip: "Очистить очередь",
-          ),
-        ],
+        title: Text((displayName)), // Dynamic title
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.play_arrow),
+        //     onPressed: _playQueue,
+        //     tooltip: "Играть очередь",
+        //   ),
+        //   IconButton(
+        //     icon: Icon(Icons.clear),
+        //     onPressed: _clearQueue,
+        //     tooltip: "Очистить очередь",
+        //   ),
+        // ],
       ),
       body: FutureBuilder<List<SoundButton>>(
         future: _buttonsFuture,
