@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:soz_alem/data/category_meta_map.dart';
 import 'package:soz_alem/models/category_model.dart';
+import 'package:soz_alem/models/home_item_model.dart';
 import 'package:soz_alem/models/sound_button.dart';
 import 'package:soz_alem/providers/queue_provider.dart';
+import 'package:soz_alem/widgets/custom_sound_card.dart';
 import '../services/api_service.dart';
 import 'category_screen.dart';
 import 'settings_screen.dart'; // Ensure this screen exists
@@ -182,6 +184,40 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         List<Category> categories = snapshot.data!;
+        final List<CustomCardItem> manualCustomCards = [
+          CustomCardItem(
+            title: "Привет!",
+            imagePath: "assets/png/hello.png",
+            linkedSound: SoundButton(
+              id: 1001,
+              title: "Привет!",
+              audio:
+                  "/home/denis/StudioProjects/sound_back_erke/backend/media/audio/Apple.mp3",
+              image:
+                  "/home/denis/StudioProjects/sound_back_erke/assets/png/activities.png",
+              categoryId: 1,
+            ),
+          ),
+          CustomCardItem(
+            title: "Спасибо!",
+            imagePath: "assets/png/thankyou.png",
+            linkedSound: SoundButton(
+              id: 1002,
+              title: "Спасибо!",
+              audio:
+                  "/home/denis/StudioProjects/sound_back_erke/backend/media/audio/Apple.mp3",
+              image:
+                  "/home/denis/StudioProjects/sound_back_erke/assets/png/activities.png",
+              categoryId: 2,
+            ),
+          ),
+        ];
+        List<HomeItem> homeItems = [
+          ...manualCustomCards, // 👈 Вручную созданные карточки
+          ...categories
+              .map((cat) => CategoryItem(cat)), // 👈 Категории с сервера
+        ];
+
         if (_isSearching) {
           final query = _searchController.text.toLowerCase();
 
@@ -202,7 +238,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             itemCount: categories.length,
             itemBuilder: (context, index) {
-              return _buildCategoryCard(categories[index], isDarkMode);
+              final item = homeItems[index];
+
+              if (item is CustomCardItem && item.linkedSound != null) {
+                return CustomSoundCard(button: item.linkedSound!);
+              } else if (item is CategoryItem) {
+                return _buildCategoryCard(item.category, isDarkMode);
+              }
             },
           ),
         );
