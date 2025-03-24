@@ -191,10 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
             linkedSound: SoundButton(
               id: 1001,
               title: "Привет!",
-              audio:
-                  "/home/denis/StudioProjects/sound_back_erke/backend/media/audio/Apple.mp3",
-              image:
-                  "/home/denis/StudioProjects/sound_back_erke/assets/png/activities.png",
+              audio: "http://10.0.2.2:8000/media/audio/Water.mp3",
+              image: "http://10.0.2.2:8000/media/images/Water.svg",
               categoryId: 1,
             ),
           ),
@@ -204,11 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
             linkedSound: SoundButton(
               id: 1002,
               title: "Спасибо!",
-              audio:
-                  "/home/denis/StudioProjects/sound_back_erke/backend/media/audio/Apple.mp3",
-              image:
-                  "/home/denis/StudioProjects/sound_back_erke/assets/png/activities.png",
-              categoryId: 2,
+              audio: "http://10.0.2.2:8000/media/audio/Juice.mp3",
+              image: "http://10.0.2.2:8000/media/images/Juice.svg",
+              categoryId: 3,
             ),
           ),
         ];
