@@ -33,28 +33,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
-  // void _clearQueue() {
-  //   setState(() {
-  //     _queue.clear();
-  //   });
-  // }
-
-  // Future<void> _playQueue() async {
-  //   if (_queue.isEmpty || _isPlayingQueue) return;
-
-  //   setState(() {
-  //     _isPlayingQueue = true;
-  //   });
-
-  //   for (var button in List.from(_queue)) {
-  //     await _playSound(button);
-  //   }
-
-  //   setState(() {
-  //     _isPlayingQueue = false;
-  //   });
-  // }
-
   Future<void> _playSound(SoundButton button) async {
     Completer<void> completer = Completer<void>();
 
@@ -84,18 +62,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text((displayName)), // Dynamic title
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.play_arrow),
-        //     onPressed: _playQueue,
-        //     tooltip: "Играть очередь",
-        //   ),
-        //   IconButton(
-        //     icon: Icon(Icons.clear),
-        //     onPressed: _clearQueue,
-        //     tooltip: "Очистить очередь",
-        //   ),
-        // ],
       ),
       body: FutureBuilder<List<SoundButton>>(
         future: _buttonsFuture,

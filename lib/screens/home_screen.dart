@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:soz_alem/data/category_meta_map.dart';
-import 'package:soz_alem/models/category_meta_model.dart';
 import 'package:soz_alem/models/category_model.dart';
 import 'package:soz_alem/models/sound_button.dart';
 import 'package:soz_alem/providers/queue_provider.dart';
