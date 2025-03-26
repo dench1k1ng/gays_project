@@ -33,6 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
+
   Future<void> _playSound(SoundButton button) async {
     Completer<void> completer = Completer<void>();
 
